@@ -1,0 +1,12 @@
+{
+	map : {	
+		"user" : {
+			username : ""
+			,password : ""
+			,database : "user_db"
+			,host : "127.0.0.1"
+			,dbdriver : "mongo"
+			,dbdriverclasspath : "com.mongodb.Mongo"
+		}
+	}
+}

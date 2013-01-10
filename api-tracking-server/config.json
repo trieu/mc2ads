@@ -1,0 +1,5 @@
+{
+	"baseParkageForHandlers" : ["com.mc2ads.server.services"]
+	,"dataNodePath" : "/tmp/backend-data"
+	,"port" : 10001	
+}
