@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import com.google.gson.Gson;
 import com.mc2ads.utils.FileUtils;
 
@@ -20,7 +19,6 @@ public class CommonConfigs {
 			try {
 				String json = FileUtils.readFileAsString("config.json");
 				_instance =  new Gson().fromJson(json, CommonConfigs.class);
-
 			} catch (IOException e) {
 				e.printStackTrace();		
 			}
