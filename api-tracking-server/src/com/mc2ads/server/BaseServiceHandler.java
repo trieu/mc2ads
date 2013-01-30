@@ -1,7 +1,5 @@
 package com.mc2ads.server;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,6 +28,6 @@ public abstract class BaseServiceHandler {
 	}
 	
 	@MethodRestHandler
-	public abstract String getServiceName(Map params );
+	public abstract String getServiceName();
 
 }

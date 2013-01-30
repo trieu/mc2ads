@@ -1,10 +1,9 @@
 package com.mc2ads.server.services;
 
-import java.util.Map;
-
 import com.mc2ads.server.BaseServiceHandler;
 import com.mc2ads.server.annotations.BaseRestHandler;
 import com.mc2ads.server.annotations.MethodRestHandler;
+import com.mc2ads.utils.ParamUtil;
 
 
 
@@ -13,14 +12,14 @@ public class HelloWorldHandler extends BaseServiceHandler {
 
 	@Override
 	@MethodRestHandler
-	public String getServiceName(Map params) {		
+	public String getServiceName() {		
 		return this.getClass().getName();
 	}
 	
 	@MethodRestHandler
-	public String sayHi(Map params) {	
+	public String sayHi() {	
 		//to call: request http://localhost:10001/hello/sayHi?name=Trieu Nguyen
-		return "Hello, " + params.get("name");
+		return "Hello, " + ParamUtil.getString(request,"name");
 	}
 
 }

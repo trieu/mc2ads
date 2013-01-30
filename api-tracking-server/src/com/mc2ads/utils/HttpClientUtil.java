@@ -40,27 +40,24 @@ import org.apache.http.util.EntityUtils;
 
 public class HttpClientUtil {	
 	
-	static HttpClient defaultHttpClient; 
+
 	
 	final static int DEFAULT_TIMEOUT = 30000;//30 seconds
 	public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 5.1; rv:9.0) Gecko/20100101 Firefox/9.0";
 	public static final String MOBILE_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 2.2; en-us; DROID2 GLOBAL Build/S273) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
-	
-	public static final HttpClient getThreadSafeClient() throws Exception {
-		if(defaultHttpClient == null){
-			SchemeRegistry schemeRegistry = new SchemeRegistry();
-			schemeRegistry.register(
-			         new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-			schemeRegistry.register(
-			         new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));	
+	static final ClientConnectionManager connectionManager;
+	static {
+	    SchemeRegistry registry = new SchemeRegistry();
+	    registry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+	    registry.register(new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));	  
+	    connectionManager = new ThreadSafeClientConnManager(registry);	
+	}
 			
-			ThreadSafeClientConnManager mgr = new ThreadSafeClientConnManager( schemeRegistry);		 
-			HttpClient httpClient = new DefaultHttpClient();
-		    HttpParams params = httpClient.getParams();
-		    HttpConnectionParams.setConnectionTimeout(params, DEFAULT_TIMEOUT);
-		    defaultHttpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(mgr.getSchemeRegistry()), params);
-		}
-	    return defaultHttpClient;
+	public static final HttpClient theThreadSafeHttpClient() {
+		HttpParams params = new BasicHttpParams();
+		HttpConnectionParams.setConnectionTimeout(params, DEFAULT_TIMEOUT);
+	    HttpClient client = new DefaultHttpClient(connectionManager, params);
+	    return client;
 	}
 	
 	public static boolean isValidHtml(String html){
@@ -73,32 +70,9 @@ public class HttpClientUtil {
 		return true;
 	}
 	
-	public static final HttpClient makeThreadSafeClient() {
-		HttpClient defaultHttpClient; 
-		SchemeRegistry schemeRegistry = new SchemeRegistry();
-		schemeRegistry.register(new Scheme("http",80, PlainSocketFactory.getSocketFactory()));
-		
-		ThreadSafeClientConnManager mgr = new ThreadSafeClientConnManager(  schemeRegistry);		 
-		HttpClient httpClient = new DefaultHttpClient();
-	    HttpParams params = httpClient.getParams();
-	    HttpConnectionParams.setConnectionTimeout(params, DEFAULT_TIMEOUT);
-	    defaultHttpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(mgr.getSchemeRegistry()), params);
-	
-	    return defaultHttpClient;
-	}
-	
-	public static final HttpClient theThreadSafeHttpClient() {
-		HttpParams params = new BasicHttpParams();
-	    SchemeRegistry registry = new SchemeRegistry();
-	    registry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-	    ClientConnectionManager cm = new ThreadSafeClientConnManager(registry);
-	    HttpClient client = new DefaultHttpClient(cm, params);
-	    return client;
-	}
-	
 	public static String executePost(String url,Map<String, String> params, String accessTokens) {
 		try {
-			HttpClient httpClient = getThreadSafeClient();
+			HttpClient httpClient = theThreadSafeHttpClient();
 			HttpPost postRequest = new HttpPost(url);			
 			postRequest.addHeader("Accept-Charset", HTTP.UTF_8);
 			postRequest.addHeader("User-Agent", MOBILE_USER_AGENT);
@@ -130,7 +104,7 @@ public class HttpClientUtil {
 	public static String executeMultipartPost(String postUrl,Map<String, Object> params, String accessTokens)
 			throws Exception {
 		try {
-			HttpClient httpClient = getThreadSafeClient();
+			HttpClient httpClient = theThreadSafeHttpClient();
 			HttpPost postRequest = new HttpPost(postUrl);			
 			postRequest.addHeader("Accept-Charset", HTTP.UTF_8);
 			postRequest.addHeader("User-Agent", MOBILE_USER_AGENT);			
@@ -159,7 +133,7 @@ public class HttpClientUtil {
 		return "";
 	}
 	
-	public static String executePost(String url){
+	public final static String executePost(String url){
 		try {	
 			HttpPost httppost = new HttpPost(url);
 			
@@ -168,10 +142,11 @@ public class HttpClientUtil {
 			httppost.setHeader("Cache-Control", "max-age=3, must-revalidate, private");	
 			httppost.setHeader("Authorization", "OAuth oauth_token=2d62f7b3de642cdd402f62e42fba0b25, oauth_consumer_key=a324957217164fd1d76b4b60d037abec, oauth_version=1.0, oauth_signature_method=HMAC-SHA1, oauth_timestamp=1322049404, oauth_nonce=-5195915877644743836, oauth_signature=wggOr1ia7juVbG%2FZ2ydImmiC%2Ft4%3D");
 
-			HttpResponse response = getThreadSafeClient().execute(httppost);
+			HttpClient client = theThreadSafeHttpClient();
+			HttpResponse response = client.execute(httppost);
 			HttpEntity entity = response.getEntity();				
 			if (entity != null) {
-				getThreadSafeClient().getConnectionManager().closeExpiredConnections();
+				client.getConnectionManager().closeExpiredConnections();
 				return EntityUtils.toString(entity, HTTP.UTF_8);
 			}
 		
@@ -184,51 +159,46 @@ public class HttpClientUtil {
 		return "";
 	}
 	
-	public static String executeGet(final URL url, boolean safeThread){
+	public final static String executeGet(final URL url, boolean safeThread){
 		HttpResponse response = null;
 		HttpClient httpClient = null;
+		HttpGet httpget = null;
+		String html = "";
 		System.out.println("executeGet:" + url);
 		try {
-			HttpGet httpget = new HttpGet(url.toURI());			
+			httpget = new HttpGet(url.toURI());			
 			httpget.setHeader("User-Agent", USER_AGENT);
 			httpget.setHeader("Accept-Charset", "utf-8");
 			httpget.setHeader("Accept", "text/html,application/xhtml+xml");
 			httpget.setHeader("Cache-Control", "max-age=3, must-revalidate, private");	
 			//httpget.addHeader(BasicScheme.authenticate(	 new UsernamePasswordCredentials("ejgsadmin", "6uCdS7cA3"),"UTF-8", false));
 			//httpget.setHeader("Authorization", "OAuth oauth_token=223a363ea1fd0a13b44e52663b97a255, oauth_consumer_key=a324957217164fd1d76b4b60d037abec, oauth_version=1.0, oauth_signature_method=HMAC-SHA1, oauth_timestamp=1322049404, oauth_nonce=-5195915877644743836, oauth_signature=wggOr1ia7juVbG%2FZ2ydImmiC%2Ft4%3D");
-			
-			if(safeThread){
-				httpClient = getThreadSafeClient();
-				response = httpClient.execute(httpget);
-			} else { 
-				httpClient = makeThreadSafeClient();
-				response = httpClient.execute(httpget);
-			}
+					
+			httpClient = theThreadSafeHttpClient();
+			response = httpClient.execute(httpget);			
 			int code = response.getStatusLine().getStatusCode();
 			if (code == 200) {				
 				HttpEntity entity = response.getEntity();
 				if (entity != null) {										
-					String html = EntityUtils.toString(entity, HTTP.UTF_8);
-					return html;
+					html = EntityUtils.toString(entity, HTTP.UTF_8);					
 				}
 			} else if(code == 404) {
 				return "404";
 			} else {
 				return "500";
 			}
-		}  catch (Throwable e) {
+		}  catch (Throwable e) {			
 			if( e instanceof java.net.ConnectException){
 				return "444";
 			} 
-			e.printStackTrace(); 
+			e.printStackTrace();
+			System.err.println("Error on execute url: " + url);			 
 		} finally {
-			if(httpClient != null) {
-				httpClient.getConnectionManager().closeExpiredConnections();
-				httpClient = null;
-			}
+			connectionManager.closeExpiredConnections();
+//			connectionManager.shutdown();
 			response = null;
 		}
-		return "";
+		return html;
 	}
 	
 	public static String executeGet(final String url, boolean safeThread){

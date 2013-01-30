@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +28,7 @@ import com.mc2ads.utils.FileUtils;
 import com.mc2ads.utils.HttpClientUtil;
 import com.mc2ads.utils.Log;
 import com.mc2ads.utils.ParamUtil;
+import com.mc2ads.utils.StringPool;
 
 
 public class ServiceNodeStarter extends AbstractHandler {
@@ -45,7 +45,7 @@ public class ServiceNodeStarter extends AbstractHandler {
 	private static final BaseLifeCycleListener BASE_LIFE_CYCLE_LISTENER = new BaseLifeCycleListener();
 		
 	protected static final boolean USE_CACHE = true;
-	private static final int BUFSIZE = 2048;
+	private static final int BUFFER_SIZE = 10000;
 	
 
 	@Override
@@ -55,7 +55,7 @@ public class ServiceNodeStarter extends AbstractHandler {
 		logger.debug("HTTP Method: " + baseRequest.getMethod() + " ,target: " + target);		
 		PrintStream writer = null;
 		try {
-			response.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(StringPool.UTF8);
 			response.setStatus(HttpServletResponse.SC_OK);
 			baseRequest.setHandled(true);
 			
@@ -70,7 +70,7 @@ public class ServiceNodeStarter extends AbstractHandler {
 			// response.getWriter().println(request.getRequestURI());
 			// response.getWriter().println(request.getQueryString());
 			writer = new PrintStream(response.getOutputStream(), true, "UTF-8");	
-			if("true".equals(request.getParameter("keep-alive")) ){
+			if(StringPool.TRUE.equals(request.getParameter("keep-alive")) ){
 				//callby: http://localhost:10001/?keep-alive=true&keep-time=10000	
 				response.setContentType("text/javascript");				
 				int timeSleep = Integer.parseInt(request.getParameter("keep-time"));				
@@ -89,7 +89,10 @@ public class ServiceNodeStarter extends AbstractHandler {
 				String s = target + " is not found";
 				logger.error(s);
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				if(writer != null) writer.print(s);
+				if(writer != null) {
+					writer.print(s);
+					writer.flush();
+				}
 				return;
 			} else {
 				e.printStackTrace();
@@ -120,9 +123,9 @@ public class ServiceNodeStarter extends AbstractHandler {
 				}
 			}	
 			if(target.endsWith(".js")){				
-				response.setContentType("text/javascript");
+				response.setContentType(StringPool.MediaType.JAVASCRIPT);
 			} else if(target.endsWith(".css")){	
-				response.setContentType("text/css");
+				response.setContentType(StringPool.MediaType.CSS);
 			}
 			//System.out.println(data);
 			response.getWriter().print(data);
@@ -139,14 +142,14 @@ public class ServiceNodeStarter extends AbstractHandler {
 				}
 			}
 			sb.append("</ul>");			
-	        response.setContentType("text/html" );
+	        response.setContentType(StringPool.MediaType.HTML );
 			response.getWriter().print(sb.toString());
 			response.getWriter().flush();	        
 		} else {
 			ServletOutputStream op = response.getOutputStream();
 			DataInputStream stream = FileUtils.readFileAsStream(target);
 			if(stream != null){
-				byte[] bbuf = new byte[BUFSIZE];
+				byte[] bbuf = new byte[BUFFER_SIZE];
 				int length = 0, totalLength = 0;
 				while ((stream != null) && ((length = stream.read(bbuf)) != -1))
 		        {
@@ -158,7 +161,7 @@ public class ServiceNodeStarter extends AbstractHandler {
 				stream.close();
 		        op.flush();
 		        op.close();		      
-		        response.setContentType("application/octet-stream" );
+		        response.setContentType(StringPool.MediaType.OCTET_STREAM);
 		        response.setContentLength( totalLength );
 			} else {
 				response.setStatus(404);
@@ -168,7 +171,7 @@ public class ServiceNodeStarter extends AbstractHandler {
 
 
 	protected void processTargetHandler(String target, String queryStr, HttpServletRequest request,HttpServletResponse response) throws Exception {
-		PrintStream writer = new PrintStream(response.getOutputStream(), true, "UTF-8");
+		PrintStream writer = new PrintStream(response.getOutputStream(), true, StringPool.UTF8);
 		try {
 			String[] toks = target.split("/");
 			
@@ -188,37 +191,29 @@ public class ServiceNodeStarter extends AbstractHandler {
 			response.setContentType("text/html");
 			response.setStatus(HttpServletResponse.SC_OK);
 
-			Map params = new HashMap();
-			Enumeration<String> p = request.getParameterNames();
-
-			while (p.hasMoreElements()) {
-				String name = p.nextElement();
-				params.put(name, request.getParameter(name));
-			}
-
 			logger.debug("Service handler namespace: "+toks[1]);
 			logger.debug("Service handler actionname: "+toks[2]);
 						
 			String namespace = toks[1];
 			Class clazz = mapperLoader.getMapperClass( namespace );			
 					
-			String key = clazz.getName();
+			String className = clazz.getName();
 
 			//check to cache service in pool
-			BaseServiceHandler handler = servicesMap.get(key);
+			BaseServiceHandler handler = servicesMap.get(className);
 			if ( handler == null ) {
 				handler = (BaseServiceHandler) clazz.newInstance(); 
-				servicesMap.put(key, handler);
+				servicesMap.put(className, handler);
 			}
 
-			Method method = clazz.getDeclaredMethod(toks[2], new Class[] { Map.class });
+			Method method = clazz.getDeclaredMethod(toks[2]);
 
 			Object result = "";
 			try {
 				//inject req + res into the service
 				handler.setHttpServletRequest(request);
 				handler.setHttpServletResponse(response);
-				result = method.invoke(servicesMap.get(key), params);
+				result = method.invoke(servicesMap.get(className));
 			} catch (Throwable e1) {
 				//e1.printStackTrace();
 				result = e1.getCause().getClass().getName() + ":" + e1.getMessage();
@@ -227,11 +222,13 @@ public class ServiceNodeStarter extends AbstractHandler {
 			}
 			//logger.info(result);
 			
-			Gson gson = new Gson();	
+			
 			String responseType = toks[3].toLowerCase();
-			response.setCharacterEncoding("utf-8");
+			response.setCharacterEncoding(StringPool.UTF8);
+			logger.info(responseType);
 			if(responseType.equals("json")){
-				response.setContentType("application/json");
+				Gson gson = new Gson();	
+				response.setContentType(StringPool.MediaType.JSON);
 				if(toks[2].equals("getServiceName")){
 					Map<String, String> obj = new HashMap<String, String>(2);
 					obj.put("service-name", result.toString());
@@ -241,7 +238,7 @@ public class ServiceNodeStarter extends AbstractHandler {
 				}
 			} else if(responseType.equals("html")){
 				//logger.info(gson.toJson(result));	
-				response.setContentType("text/html");
+				response.setContentType(StringPool.MediaType.HTML);
 				
 				String path = ParamUtil.getString(request, "path","");
 				if(path.length()>5){
@@ -257,7 +254,7 @@ public class ServiceNodeStarter extends AbstractHandler {
 					writer.print(result);
 				}
 			} else if(responseType.equals("string")){			
-				response.setContentType("text/html");
+				response.setContentType(StringPool.MediaType.HTML);
 				writer.print(result);
 			} else {
 				String filepath = "/resources/html/target_response.html";			
@@ -273,7 +270,7 @@ public class ServiceNodeStarter extends AbstractHandler {
 				}		
 				if(html != null){
 					html = html.replace("{Origin}", request.getHeader("Origin"));
-					html = html.replace("{json}", gson.toJson(result));
+					html = html.replace("{json}", new Gson().toJson(result));
 					writer.print(html);
 				} else {
 					writer.print("Can not handle the request: " + target);
@@ -314,6 +311,7 @@ public class ServiceNodeStarter extends AbstractHandler {
 		if("444".equals(html)){
 			Server server = new Server(port);
 			
+			
 //			ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 //	        context.setContextPath("/");
 //	        server.setHandler(context);
@@ -324,7 +322,7 @@ public class ServiceNodeStarter extends AbstractHandler {
 			ServiceNodeStarter theHandler = new ServiceNodeStarter();
 			theHandler.initLifeCycleListener();		
 			server.setHandler(theHandler);
-			Log.get(ServiceNodeStarter.class).info("Starting Agent Pools at port " + port + " ...");
+			Log.get(ServiceNodeStarter.class).info("Starting Emdeded Jetty "+ Server.getVersion() +" at port " + port + " ...");
 			logger.info("JVM: " + System.getProperty("sun.arch.data.model") + " bit, version: " + System.getProperty("java.version"));
 			server.start();
 			server.join();		

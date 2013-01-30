@@ -3,7 +3,6 @@ package com.mc2ads.server.services;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -20,12 +19,12 @@ import com.mc2ads.utils.ScalingImageUtil;
 public class UploadFilesHandler extends BaseServiceHandler {
 
 	@MethodRestHandler
-	public String getServiceName(Map params) {
+	public String getServiceName() {
 		return this.getClass().getName();
 	}
 
 	@MethodRestHandler
-	public String upload(Map params) {
+	public String upload() {
 		// to call: request http://localhost:10001/hello/sayHi?name=Trieu Nguyen
 		if (request.getMethod().equals("POST")) {
 			try {

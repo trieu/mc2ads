@@ -117,5 +117,13 @@ public final class StringPool {
     public static final String UTF8 = "UTF-8";
     
     public static final String FTL_EXT = ".ftl";
+    
+    public static final class MediaType {
+    	public static final String JSON = "application/json";
+    	public static final String HTML = "text/html";
+    	public static final String OCTET_STREAM = "application/octet-stream";
+    	public static final String JAVASCRIPT = "text/javascript";
+    	public static final String CSS = "text/css";
+    }
 
 }

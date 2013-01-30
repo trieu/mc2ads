@@ -14,7 +14,7 @@ public class NodesStarter {
 			max = Integer.parseInt(args[1]);
 			jarName = (args[2]);
 		}		
-		String cmd = "java -jar -Xms"+min+"m -Xmx"+max+"m -XX:-UseParallelGC "+jarName;
+		String cmd = "java -jar -Xms"+min+"m -Xmx"+max+"m -XX:MaxPermSize="+max+"m -XX:+CMSClassUnloadingEnabled -XX:-UseParallelGC "+jarName;
 		Runtime.getRuntime().exec(cmd);
 		System.out.println("exec job :" + cmd);
 		
