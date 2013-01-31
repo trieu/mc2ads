@@ -99,6 +99,12 @@ public class ParamUtil {
     public static int getInteger(HttpServletRequest request, String param) {
         return GetterUtil.getInteger(request.getParameter(param));
     }
+    
+    public static int getInt(
+            HttpServletRequest request, String param, int defaultValue) {
+
+            return get(request, param, defaultValue);
+        }
 
     public static int getInteger(
         HttpServletRequest request, String param, int defaultValue) {

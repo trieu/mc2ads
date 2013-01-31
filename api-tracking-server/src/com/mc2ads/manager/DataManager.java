@@ -15,13 +15,13 @@ public class DataManager {
 	private static Map<String, DataSource> _dataSources = new HashMap<String, DataSource>();
 
 	public static DataSource getNewDataSource(String db) {		
-		DataSource _dataSource = setupDataSource(SqlDbConfigs.loadFromFile(db));			
+		DataSource _dataSource = setupDataSource(SqlDbConfigs.load(db));			
 		return _dataSource;
 	}
 	public static DataSource getDataSource(String db) {		
 		DataSource _dataSource = _dataSources.get(db);
 		if(_dataSource  == null){
-			_dataSource = setupDataSource(SqlDbConfigs.loadFromFile( db));
+			_dataSource = setupDataSource(SqlDbConfigs.load( db));
 			_dataSources.put(db, _dataSource);
 		}
 		return _dataSource;

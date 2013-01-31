@@ -34,7 +34,7 @@ public class UserManagerImpl implements UserManager {
 	
 	protected UserManagerImpl(){
 		try {
-			SqlDbConfigs configs = SqlDbConfigs.loadFromFile( "user");
+			SqlDbConfigs configs = SqlDbConfigs.load( "user");
 			dbManager = new MongoDbManagerImpl(configs.getHost(), configs.getDatabase());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

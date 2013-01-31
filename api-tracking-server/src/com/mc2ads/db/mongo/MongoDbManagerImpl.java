@@ -40,7 +40,7 @@ public class MongoDbManagerImpl implements MongoDbManager {
 	public static MongoDbManager getInstance(String configName) throws Exception {
 		if(instance == null){
 			try {
-				SqlDbConfigs configs = SqlDbConfigs.loadFromFile(configName);
+				SqlDbConfigs configs = SqlDbConfigs.load(configName);
 				instance = new MongoDbManagerImpl(configs.getHost(), configs.getDatabase());
 			} catch (Exception e) {				
 				e.printStackTrace();

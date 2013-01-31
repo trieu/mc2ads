@@ -11,11 +11,10 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.mc2ads.server.BaseServiceHandler;
-import com.mc2ads.server.annotations.BaseRestHandler;
 import com.mc2ads.server.annotations.MethodRestHandler;
 import com.mc2ads.utils.ScalingImageUtil;
 
-@BaseRestHandler(uri = "upload")
+//@BaseRestHandler(uri = "upload")
 public class UploadFilesHandler extends BaseServiceHandler {
 
 	@MethodRestHandler

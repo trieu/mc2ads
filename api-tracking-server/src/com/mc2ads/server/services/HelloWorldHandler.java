@@ -19,7 +19,7 @@ public class HelloWorldHandler extends BaseServiceHandler {
 	@MethodRestHandler
 	public String sayHi() {	
 		//to call: request http://localhost:10001/hello/sayHi?name=Trieu Nguyen
-		return "Hello, " + ParamUtil.getString(request,"name");
+		return "Hello from api rest server, " + ParamUtil.getString(request,"name");
 	}
 
 }

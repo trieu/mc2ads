@@ -1,79 +1,93 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="backend-server" name="Mc2ads Tools">
+<project default="rest-api-server" name="rest-api-server">
 	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
 	<!--ANT 1.7 is required                                        -->
 	
-
 	<property name="class_path_for_server" value=". ;
-		lib/apache-mime4j-0.6.jar ; 
-		lib/commons-codec.jar ; 
-		lib/commons-dbcp-1.4.jar ;			
-		lib/commons-io.jar ; 
-		lib/commons-lang3-3.1.jar ;	
-		lib/commons-logging.jar ; 
-		lib/commons-fileupload-1.2.2.jar ;
-		lib/gson.jar ; 
-		lib/guava.jar ;	
-		lib/httpclient-4.1.3.jar ; 	
-		lib/httpclient-cache.jar ; 
-		lib/httpcore.jar ; 
-		lib/httpmime.jar ; 
-		lib/jdbm-2.4.jar ; 
-		lib/json-org.jar ; 
-		lib/jsoup.jar ;  
-		lib/log4j-1.2.16.jar ;  
-		lib/mail.jar ;
-		
-		lib/mysql-connector-java-5.1.21-bin.jar ;
-		lib/mongo.jar ;
-		
-		lib/smack.jar ; 
-		lib/smackx.jar ;	
-		
-		lib/jetty-ajp.jar ; lib/jetty-annotations.jar ; lib/jetty-client.jar ; lib/jetty-continuation.jar ;
-		lib/jetty-deploy.jar ; lib/jetty-http.jar ; lib/jetty-io.jar ; 	lib/jetty-jmx.jar ; lib/jetty-jndi.jar ;
-		lib/jetty-overlay-deployer.jar ; lib/jetty-plus.jar ; lib/jetty-policy.jar ; lib/jetty-rewrite.jar ; 
-		lib/jetty-security.jar ; lib/jetty-server.jar ; lib/jetty-servlet.jar ; lib/jetty-servlets.jar ; lib/jetty-util.jar ; 
-		lib/jetty-webapp.jar ; lib/jetty-websocket.jar ; lib/jetty-xml.jar ; 
-		lib/servlet-api.jar ;
-		
-		lib/commons-pool-1.6.jar ; 	
-		lib/freemarker.jar ;
-		lib/slf4j-jdk14-1.6.1.jar ; 			  
+			lib/apache-mime4j-0.6.jar ; 
+			lib/commons-codec.jar ; 
+			lib/commons-dbcp-1.4.jar ; 
+			lib/commons-io.jar ; 
+			lib/commons-lang3-3.1.jar ; 
+			lib/commons-logging.jar ; 
+			lib/gson.jar ; 
+			lib/httpclient-4.1.3.jar ; 
+			lib/httpclient-cache.jar ; 
+			lib/httpcore.jar ; 
+			lib/httpmime.jar ; 
+			lib/jdbm-2.4.jar ; 
+			lib/json-org.jar ; 
+			lib/jsoup.jar ; 
+			lib/log4j-1.2.16.jar ; 
+			lib/mysql-connector-java-5.1.21-bin.jar ; 
+			lib/smack.jar ; 
+			lib/smackx.jar ; 
+			lib/mail.jar ; 
+			lib/guava.jar ; 
+			lib/apns-0.1.5-jar-with-dependencies.jar ; 
+			lib/freemarker.jar ; 
+			lib/commons-pool-1.6.jar ; 
+			lib/slf4j-jdk14-1.6.1.jar ; 
+			lib/mongo.jar ; 
+			lib/commons-fileupload-1.2.2.jar ; 
+			lib/super-csv-2.0.0-beta-1.jar ; 
+			lib/contiperf-2.2.0.jar ; 
+			lib/junit-4.8.1.jar ; 
+			lib/jedis-2.1.0.jar ; 
+			lib/jetty-8.1.8/jetty-ajp-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-annotations-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-client-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-continuation-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-deploy-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-http-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-io-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-jmx-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-jndi-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-overlay-deployer-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-plus-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-policy-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-rewrite-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-security-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-server-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-servlet-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-servlets-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-util-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-webapp-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-websocket-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/jetty-xml-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/servlet-api-3.0.jar ; 
+			lib/jetty-8.1.8/annotations/javax.annotation-1.1.0.v201108011116.jar ; 
+			lib/jetty-8.1.8/annotations/org.objectweb.asm-3.1.0.v200803061910.jar ; 
+			lib/jetty-8.1.8/jndi/javax.activation-1.1.0.v201105071233.jar ; 
+			lib/jetty-8.1.8/jndi/javax.mail.glassfish-1.4.1.v201005082020.jar ; 
+			lib/jetty-8.1.8/jsp/com.sun.el-2.2.0.v201108011116.jar ; 
+			lib/jetty-8.1.8/jsp/javax.el-2.2.0.v201108011116.jar ; 
+			lib/jetty-8.1.8/jsp/javax.servlet.jsp-2.2.0.v201112011158.jar ; 
+			lib/jetty-8.1.8/jsp/javax.servlet.jsp.jstl-1.2.0.v201105211821.jar ; 
+			lib/jetty-8.1.8/jsp/org.apache.jasper.glassfish-2.2.2.v201112011158.jar ; 
+			lib/jetty-8.1.8/jsp/org.apache.taglibs.standard.glassfish-1.2.0.v201112081803.jar ; 
+			lib/jetty-8.1.8/jsp/org.eclipse.jdt.core-3.7.1.jar ; 
+			lib/jetty-8.1.8/jta/javax.transaction-1.1.1.v201105210645.jar ; 
+			lib/jetty-8.1.8/monitor/jetty-monitor-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/spdy/spdy-core-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/spdy/spdy-jetty-8.1.8.v20121106.jar ; 
+			lib/jetty-8.1.8/spdy/spdy-jetty-http-8.1.8.v20121106.jar ; 
+			lib/ojdbc6.jar ; 
+			lib/async-http-client-1.7.8.jar ; 
+			lib/jackson-core-asl-1.9.11.jar ; 
 		"  />
-	
-	<property name="xmpp_converter_class_path" value=". ;
-		lib/apache-mime4j-0.6.jar ; 
-		lib/commons-codec.jar ; 
-		lib/commons-dbcp-1.4.jar ;			
-		lib/commons-io.jar ; 
-		lib/commons-lang3-3.1.jar ;	
-		lib/commons-logging.jar ; 
-		lib/gson.jar ; 
-		lib/guava.jar ;	
-		lib/httpclient-4.1.3.jar ; 	
-		lib/httpclient-cache.jar ; 
-		lib/httpcore.jar ; 
-		lib/httpmime.jar ; 
-		lib/jdbm-2.4.jar ; 
-		lib/json-org.jar ; 
-		lib/jsoup.jar ;  
-		lib/log4j-1.2.16.jar ;  
-		lib/mail.jar ; 	
-		lib/mysql-connector-java-5.1.21-bin.jar ;
-		lib/smack.jar ; 
-		lib/smackx.jar ;		  
-		"  />
-	
-	
-	
-	<target name="backend-server">
-		<jar destfile="backend-server.jar" filesetmanifest="mergewithoutmain">
+		
+	<target name="rest-api-server">
+		<jar destfile="rest-api-server.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="com.mc2ads.ServiceNodeStarter" />
 				<attribute name="Class-Path" value="${class_path_for_server}" />
 			</manifest>
-			<fileset dir="bin" excludes="**/.svn/*" ></fileset>
+			<fileset dir="bin" >
+			    <exclude name="**/tests*" />				
+				<exclude name="**/tests/*" />
+				<exclude name="**/.svn/*" />
+			</fileset>	
 		</jar>			
 	</target>
 	
@@ -83,7 +97,11 @@
 				<attribute name="Main-Class" value="com.mc2ads.NodesStarter" />
 				<attribute name="Class-Path" value="." />
 			</manifest>
-			<fileset dir="bin" excludes="**/.svn/*" ></fileset>
+			<fileset dir="bin"  >
+			    <exclude name="tests" />
+				<exclude name="**/.svn/**" />
+				<exclude name="**/tests/**" />
+			</fileset>			
 		</jar>			
 	</target>
 	

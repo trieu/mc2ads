@@ -225,7 +225,7 @@ public class ServiceNodeStarter extends AbstractHandler {
 			
 			String responseType = toks[3].toLowerCase();
 			response.setCharacterEncoding(StringPool.UTF8);
-			logger.info(responseType);
+			//logger.info(responseType);
 			if(responseType.equals("json")){
 				Gson gson = new Gson();	
 				response.setContentType(StringPool.MediaType.JSON);
