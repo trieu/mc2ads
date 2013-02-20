@@ -2,7 +2,7 @@
 <project default="rest-api-server" name="rest-api-server">
 	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
 	<!--ANT 1.7 is required                                        -->
-	
+
 	<property name="class_path_for_server" value=". ;
 			lib/apache-mime4j-0.6.jar ; 
 			lib/commons-codec.jar ; 
@@ -75,37 +75,79 @@
 			lib/ojdbc6.jar ; 
 			lib/async-http-client-1.7.8.jar ; 
 			lib/jackson-core-asl-1.9.11.jar ; 
-		"  />
-		
+		" />
+
+	<!-- set global properties for this build -->
+	<property name="app.name" value="vne-chrome-app" />
+	<property name="app.version" value="1.0.0" />
+	<property name="app.vendor" value="FPT Online" />
+
+	<property name="src" location="src" />
+	<property name="dist" location="dist" />
+	<property name="lib" location="lib" />
+	<property name="resources" location="resources" />
+
+
 	<target name="rest-api-server">
 		<jar destfile="rest-api-server.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="com.mc2ads.ServiceNodeStarter" />
 				<attribute name="Class-Path" value="${class_path_for_server}" />
+				<attribute name="Implementation-Title" value="${app.name}" />
+				<attribute name="Implementation-Version" value="${app.version}" />
+				<attribute name="Implementation-Vendor" value="${app.vendor}" />
 			</manifest>
-			<fileset dir="bin" >
-			    <exclude name="**/tests*" />				
+			<fileset dir="bin">
+				<exclude name="**/tests*" />
 				<exclude name="**/tests/*" />
 				<exclude name="**/.svn/*" />
-			</fileset>	
-		</jar>			
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="dist" depends="clean,rest-api-server" description="generate the distribution">
+
+		<copy file="rest-api-server.jar" todir="${dist}" />
+		<copy file="auto-tasks-configs.json" todir="${dist}" />
+		<copy file="config.json" todir="${dist}" />
+		<copy file="dbconfigs.json" todir="${dist}" />
+		<copy file="log4j.properties" todir="${dist}" />
+		<copy file="start.bat" todir="${dist}" />
+		<copy file="start.sh" todir="${dist}" />		
+		
+		<copy todir="${dist}/resources/images">
+			<fileset dir="${resources}/images" includes="**" />
+		</copy>	
+		<copy todir="${dist}/lib">
+			<fileset dir="${lib}" includes="**" />
+		</copy>
+		
+		<mkdir dir="${dist}/log" />	
+		
+		<zip destfile="vne-api-server-dist.zip"  basedir="${dist}"  />
+		<delete dir="${dist}" />
 	</target>
 	
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->		
+		<delete dir="${dist}" />
+	</target>
+
 	<target name="node-starter">
 		<jar destfile="node-starter.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="com.mc2ads.NodesStarter" />
 				<attribute name="Class-Path" value="." />
 			</manifest>
-			<fileset dir="bin"  >
-			    <exclude name="tests" />
+			<fileset dir="bin">
+				<exclude name="tests" />
 				<exclude name="**/.svn/**" />
 				<exclude name="**/tests/**" />
-			</fileset>			
-		</jar>			
+			</fileset>
+		</jar>
 	</target>
-	
-	
-	
-	
+
+
+
+
 </project>

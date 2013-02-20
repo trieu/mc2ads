@@ -1,12 +1,28 @@
 {
-	map : {	
-		"user" : {
-			username : ""
-			,password : ""
-			,database : "user_db"
-			,host : "127.0.0.1"
-			,dbdriver : "mongo"
-			,dbdriverclasspath : "com.mongodb.Mongo"
+	map : {			
+		db_oracle_video : {
+			username : "LA"
+			,password : "123456"
+			,database : "ORADEV1"
+			,host : "10.254.53.220"
+			,dbdriver : "oracle"
+			,dbdriverclasspath : "oracle.jdbc.driver.OracleDriver"
+		},
+		db_mysql_video : {
+			username : "acc_plugin"
+			,password : "acc_plugin@123"
+			,database : "ent"
+			,host : "172.30.114.13"
+			,dbdriver : "mysql"
+			,dbdriverclasspath : "com.mysql.jdbc.Driver"
+		},
+		db_mysql_video_nhacso : {
+			username : "music_plugin"
+			,password : "music_plugin@123"
+			,database : "nhacso"
+			,host : "10.254.53.245"
+			,dbdriver : "mysql"
+			,dbdriverclasspath : "com.mysql.jdbc.Driver"
 		}
 	}
 }

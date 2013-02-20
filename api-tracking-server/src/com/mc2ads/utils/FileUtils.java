@@ -7,10 +7,10 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -128,6 +128,32 @@ public class FileUtils {
 		}
 		reader.close();
 		return fileData.toString();
+	}
+	
+	
+	
+	public static void readFileByLine(String uri, AbstractFileLineReader fileLineReader){
+		try {			
+			//String fullpath = "D:/eClick_Log_Report/raw";
+			String fullpath = FileUtils.getRuntimeFolderPath() + uri.replace("/", File.separator);
+			if(!uri.startsWith("/")){
+				fullpath = FileUtils.getRuntimeFolderPath() + File.separator + uri.replace("/", File.separator);
+			}			
+			BufferedReader br = new BufferedReader(new FileReader(fullpath));
+			if(br.ready()){
+				String line = null;		
+				while ((line = br.readLine()) != null) {
+				  // System.out.println(line);
+				   fileLineReader.readLine(line);				  
+				}
+			}			
+			br.close();
+		} catch (FileNotFoundException e) {
+			
+			e.printStackTrace();
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
 	}
 	
 	public static File[]  listFilesInForder(String folderPath) throws java.io.IOException {

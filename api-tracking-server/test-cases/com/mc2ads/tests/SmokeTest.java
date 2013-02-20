@@ -16,20 +16,22 @@ public class SmokeTest {
     public ContiPerfRule i = new ContiPerfRule();
     
     //static final String testurl = "http://localhost:10001/log/track/html?fosp_aid=1&url=http://vnexpress.net";
-    static final String testurl = "http://localhost:10001/vne-article/relatedVideos/json?dbid=2&id=111";
+    //static final String testurl = "http://localhost:10001/vne-article/relatedVideos/json?dbid=2&id=111";
+    //static final String testurl = "http://180.148.135.57:443/vne-article/relatedVideos/json?dbid=2&id=2417082";
+    static final String testurl = "http://localhost/i2tree-framework/front-end/index.php/mc2ads/get_top_ads";
 
     @Test
     @PerfTest(invocations = 5000, threads = 1000)
-    @Required(max = 21000, average = 3000)
+    @Required(max = 30000, average = 5000)
     public void smokeTesttLogTracking() throws Exception {    	
     	String html = HttpClientUtil.executeGet(testurl, false);
 /*    	AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
     	Future<Response> f = asyncHttpClient.prepareGet(testurl).execute();
     	Response r = f.get();
     	String html = r.getResponseBody();*/
-    	System.out.println(html);
-    	Assert.assertTrue(html.contains("aaaa"));
-        Thread.sleep(100);
+    	//System.out.println(html);
+    	Assert.assertTrue(html.contains("iPhone"));
+        //Thread.sleep(100);
     }
 
 }
