@@ -130,9 +130,7 @@ public class VideoManagerImpl {
 		if (video == null) {
 			if (dbid == 1) {
 				String title = rs.getString("VideoName");
-				String thumbnail_url = (new StringBuilder(String.valueOf(rs
-						.getString("URLThumb")))).append("/")
-						.append(rs.getString("Thumbnail")).toString();
+				String thumbnail_url = (new StringBuilder(rs.getString("URLThumb"))).append("/").append(rs.getString("Thumbnail")).toString();
 				if (thumbnail_url.trim().isEmpty())
 					thumbnail_url = "http://vnexpress.net/Images/video-vne.jpg";
 				Date date = new Date(rs.getLong("CreateDate") * 1000L);
