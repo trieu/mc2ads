@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import oracle.jdbc.OracleTypes;
+
 import org.apache.log4j.Logger;
 
 import com.google.common.cache.CacheBuilder;
@@ -25,12 +27,12 @@ public class VideoManagerImpl {
 	}
 
 	public List<Long> getRelatedVideoIds(int dbid, long id) {
-		Connection dbConnection;
-		CallableStatement cs;
+		Connection dbConnection = null;
+		CallableStatement cs = null;
 		String query;
 		List<Long> ids;
-		dbConnection = null;
-		cs = null;
+		
+		
 		ResultSet rs = null;
 		query = "{call GET_RESULT_ASSOCIATION(?,?,?)}";
 		ids = new ArrayList<Long>();
@@ -39,12 +41,12 @@ public class VideoManagerImpl {
 			cs = dbConnection.prepareCall(query);
 			cs.setInt(1, dbid);
 			cs.setLong(2, id);
-			cs.registerOutParameter(3, -10);
+			cs.registerOutParameter(3, OracleTypes.CURSOR);
 			cs.execute();
-			for (rs = (ResultSet) cs.getObject(3); rs.next(); ids.add(new Long(
-					rs.getString(1))))
-				;
-
+			rs = (ResultSet) cs.getObject(3); 
+			while(rs.next()){ 
+				ids.add(rs.getLong(1));
+			}
 		} catch (SQLException e) {
 			logger.error(e);
 		} finally {
