@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="storm-topo" name="learning-storm">
+	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
+	<!--ANT 1.7 is required                                        -->
+
+
+	<property name="class_path_for_server" value=".;
+		libs/apache-mime4j-0.6.jar ; 
+		libs/asm-4.0.jar ; 
+		libs/carbonite-1.5.0.jar ; 
+		libs/clj-time-0.4.1.jar ; 
+		libs/clojure-1.4.0.jar ; 
+		libs/clout-1.0.1.jar ; 
+		libs/commons-codec-1.4.jar ; 
+		libs/commons-exec-1.1.jar ; 
+		libs/commons-fileupload-1.2.1.jar ; 
+		libs/commons-io-1.4.jar ; 
+		libs/commons-lang-2.5.jar ; 
+		libs/commons-lang3-3.1.jar ; 
+		libs/commons-logging-1.1.1.jar ; 
+		libs/compojure-1.1.3.jar ; 
+		libs/core.incubator-0.1.0.jar ; 
+		libs/curator-client-1.0.1.jar ; 
+		libs/curator-framework-1.0.1.jar ; 
+		libs/disruptor-2.10.1.jar ; 
+		libs/guava-13.0.jar ; 
+		libs/hiccup-0.3.6.jar ; 
+		libs/httpclient-4.1.1.jar ; 
+		libs/httpcore-4.1.jar ; 
+		libs/httpmime.jar ; 
+		libs/jedis-2.1.0.jar ; 
+		libs/jetty-6.1.26.jar ; 
+		libs/jetty-util-6.1.26.jar ; 
+		libs/jgrapht-0.8.3.jar ; 
+		libs/jline-0.9.94.jar ; 
+		libs/joda-time-2.0.jar ; 
+		libs/johm-0.5.0.jar ; 
+		libs/json-simple-1.1.jar ; 		
+		libs/jsoup.jar ; 
+		libs/junit-3.8.1.jar ; 
+		libs/jzmq-2.1.0.jar ; 
+		libs/kryo-2.17.jar ; 
+		libs/libthrift7-0.7.0.jar ; 
+		libs/log4j-1.2.16.jar ; 
+		libs/mail.jar ; 
+		libs/math.numeric-tower-0.0.1.jar ; 
+		libs/minlog-1.2.jar ; 
+		libs/netty-3.6.0.jar ; 
+		libs/objenesis-1.2.jar ; 
+		libs/reflectasm-1.07-shaded.jar ; 
+		libs/ring-core-1.1.5.jar ; 
+		libs/ring-jetty-adapter-0.3.11.jar ; 
+		libs/ring-servlet-0.3.11.jar ; 
+		libs/servlet-api-2.5-20081211.jar ; 
+		libs/servlet-api-2.5.jar ; 
+		libs/slf4j-api-1.5.8.jar ; 
+		libs/slf4j-log4j12-1.5.8.jar ; 
+		libs/snakeyaml-1.9.jar ; 
+		libs/storm-0.8.2.jar ; 
+		libs/tools.cli-0.2.2.jar ; 
+		libs/tools.logging-0.2.3.jar ; 
+		libs/tools.macro-0.1.0.jar ; 
+		libs/twitter4j-core-3.0.2.jar ; 
+		libs/twitter4j-stream-3.0.2.jar ; 
+		libs/zookeeper-3.3.3.jar ; 	  
+		" />
+
+	<!-- set global properties for this build -->
+	<property name="app.name" value="storm-ads" />
+	<property name="app.version" value="1.0.0" />
+	<property name="app.vendor" value="FPT Online" />
+
+	<property name="src" location="src" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="libs" location="libs" />
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+	</target>
+
+	<path id="jars">
+		<fileset dir="${libs}" includes="**/*.jar" excludes="**/.svn/*" />
+	</path>
+
+	<target name="compile" depends="init" description="compile the source ">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" classpathref="jars" debug="on" />
+	</target>
+
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+
+	<target name="storm-topo">
+		<jar destfile="storm-topo.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="com.mc2ads.server.SimpleHttpNode" />
+				<attribute name="Class-Path" value="${class_path_for_server}" />
+				<attribute name="Implementation-Title" value="${app.name}" />
+				<attribute name="Implementation-Version" value="${app.version}" />
+				<attribute name="Implementation-Vendor" value="${app.vendor}" />
+			</manifest>
+			<fileset dir="bin" excludes="**/.svn/*">
+			</fileset>
+		</jar>
+	</target>
+
+
+
+
+
+</project>
