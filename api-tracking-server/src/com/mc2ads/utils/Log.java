@@ -39,9 +39,19 @@ public class Log {
 	public static void println(Object ... args) {
 		if (MODE == PRINT_CONSOLE) {
 			for (Object object : args) {
-				println(object);
-				
+				println(object);				
 			}
+		}
+	}
+	
+	public static void println(String delimiter, Object ... args) {
+		if (MODE == PRINT_CONSOLE) {
+			for (Object object : args) {
+				if( ! object.toString().isEmpty() ){
+					System.out.print(object + delimiter );
+				}
+			}
+			System.out.println();
 		}
 	}
 

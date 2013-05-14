@@ -18,5 +18,4 @@ public class UrlUtil {
 		}
 		return uri;
 	}
-
 }

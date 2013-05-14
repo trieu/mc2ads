@@ -12,9 +12,7 @@ import oracle.jdbc.OracleTypes;
 
 import com.mc2ads.db.SqlDbConfigs;
 
-public class OracleDbConnector {
-
-	
+public class OracleDbConnector {	
 
 	public static void testConnnection(String[] args) throws SQLException {
 		final String DBURL = "jdbc:oracle:thin:@10.254.53.220:1521:ORADEV1";

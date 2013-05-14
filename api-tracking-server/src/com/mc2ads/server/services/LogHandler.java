@@ -12,7 +12,6 @@ import com.mc2ads.model.UrlTrackingPayload;
 import com.mc2ads.server.BaseServiceHandler;
 import com.mc2ads.server.annotations.BaseRestHandler;
 import com.mc2ads.server.annotations.MethodRestHandler;
-import com.mc2ads.utils.HashUtil;
 import com.mc2ads.utils.Log;
 import com.mc2ads.utils.ParamUtil;
 import com.mc2ads.utils.TemplateUtils;
@@ -43,6 +42,7 @@ public class LogHandler extends BaseServiceHandler {
 
 	final static String RS = "1";
 
+	int c = 0;
 	@MethodRestHandler
 	public String track() {
 
@@ -51,15 +51,18 @@ public class LogHandler extends BaseServiceHandler {
 		final String keywords = ParamUtil.getString(request, "keywords", "");
 		final String categories = ParamUtil.getString(request, "categories", "");
 
-		System.out.println(HashUtil.hashUrl(url));
+		//System.out.println(HashUtil.hashUrl(url));
 
 		final String fosp_aid = ParamUtil.getString(request, "fosp_aid");
 
 		// TODO submit raw data to storm for real-time computation
 
-		System.out.println("-------------------------------");		
-		Log.println(url, title, keywords, fosp_aid, categories);		
+		System.out.println("-------------------------------");
+		c++;
+		Log.println(" - ",c, url, title, keywords, fosp_aid, categories);		
 	    producer.send(new ProducerData<Integer, String>(topic, new UrlTrackingPayload(request).toJson()));
+	    producer.close();
+	    
 		System.out.println("-------------------------------");
 		return RS;
 	}

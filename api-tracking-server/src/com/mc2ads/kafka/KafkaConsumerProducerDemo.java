@@ -23,7 +23,7 @@ public class KafkaConsumerProducerDemo implements KafkaProperties
     //Producer producerThread = new Producer(KafkaProperties.topic);
 	//producerThread.start();
 
-    Consumer consumerThread = new Consumer(KafkaProperties.topicUrlTracking);
+    Consumer consumerThread = new Consumer("url_tracking");
     consumerThread.start();
     
   }
