@@ -231,6 +231,8 @@ public class TestDbProcessingTopology {
 		builder.setBolt("aggregation", new DbAggregation()).shuffleGrouping("dbRowProcessing");
 		
 		Config conf = new Config();
+		conf.put(Config.STORM_LOCAL_DIR, "D:/storm-tmp");
+		conf.put(Config.DEV_ZOOKEEPER_PATH, "D:/storm-tmp");
 		//conf.setDebug(true);
 
 		LocalCluster cluster = new LocalCluster();
