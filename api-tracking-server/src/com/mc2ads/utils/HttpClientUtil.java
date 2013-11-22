@@ -42,7 +42,7 @@ public class HttpClientUtil {
 	
 
 	
-	final static int DEFAULT_TIMEOUT = 45000;//30 seconds
+	final static int DEFAULT_TIMEOUT = 10000;//10 seconds
 	public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 5.1; rv:9.0) Gecko/20100101 Firefox/9.0";
 	public static final String MOBILE_USER_AGENT = "Mozilla/5.0 (Linux; U; Android 2.2; en-us; DROID2 GLOBAL Build/S273) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
 //	static final ClientConnectionManager connectionManager;

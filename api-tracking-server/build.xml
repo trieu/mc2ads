@@ -74,7 +74,14 @@
 			lib/jetty-8.1.8/spdy/spdy-jetty-http-8.1.8.v20121106.jar ; 
 			lib/ojdbc6.jar ; 
 			lib/async-http-client-1.7.8.jar ; 
-			lib/jackson-core-asl-1.9.11.jar ; 
+			lib/jackson-core-asl-1.9.11.jar ;
+			lib/jedis-2.1.0.jar ;
+			lib/groovy-all-2.1.5-indy.jar ;
+			lib/gpars-1.0.0.jar ;
+			lib/jsr166y-1.7.0.jar ;
+			lib/multiverse-beta-0.7-RC-1.jar ;
+			lib/netty-3.6.6.jar ;
+			lib/mapdb-0.9.7.jar ;
 		" />
 
 	<!-- set global properties for this build -->

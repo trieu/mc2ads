@@ -1,0 +1,1 @@
+import com.mc2ads.manager.DeviceInfoManager;import com.mc2ads.utils.AndroidGcmUtil;    def s = "  DeviceInfoManager.notifyAllDevices";    String deviceId = "...";  //s += AndroidGcmUtil.notify(deviceId);    //DeviceInfoManager.importAllDeviceToMapDb();  //DeviceInfoManager.notifyAllDevices();      output = s;

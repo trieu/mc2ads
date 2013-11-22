@@ -1,7 +1,5 @@
 package com.mc2ads.utils;
 
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class TimeUtil {
 	

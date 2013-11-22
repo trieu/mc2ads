@@ -25,6 +25,7 @@ import com.mc2ads.server.BaseServiceHandler;
 import com.mc2ads.server.CommonConfigs;
 import com.mc2ads.server.ServiceMapperLoader;
 import com.mc2ads.utils.FileUtils;
+import com.mc2ads.utils.GroovyScriptUtil;
 import com.mc2ads.utils.HttpClientUtil;
 import com.mc2ads.utils.Log;
 import com.mc2ads.utils.ParamUtil;
@@ -65,7 +66,18 @@ public class ServiceNodeStarter extends AbstractHandler {
 			} else if (target.startsWith("/resources/")){		
 				processTargetResource(target, request, response);						
 				return;
-			}	
+			} else if (target.startsWith("/script/")){
+				writer = new PrintStream(response.getOutputStream(), true, "UTF-8");
+				response.setContentType(StringPool.MediaType.HTML );
+				String[] toks = target.split("/");
+				if(toks.length > 2 ){
+					String controllerName = toks[2];
+					String output = GroovyScriptUtil.runControllerScript(controllerName , request.getParameterMap());
+					writer.print(output);
+					writer.flush();
+					return;
+				}
+			}
 			
 			// response.getWriter().println(request.getRequestURI());
 			// response.getWriter().println(request.getQueryString());
